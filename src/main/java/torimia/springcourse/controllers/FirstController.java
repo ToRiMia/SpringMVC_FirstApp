@@ -13,16 +13,39 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/first")
 public class FirstController {
 
+    //http://localhost:8080/first/calculator?a=9&b=23&action=multiplication
+    @GetMapping("/calculator")
+    public String calculator(@RequestParam(value = "a", required = false) int a,
+                             @RequestParam(value = "b", required = false) int b,
+                             @RequestParam(value = "action", required = false) String action, Model model) {
+        double c = 0;
+        switch (action) {
+            case "multiplication":
+                c = a * b;
+                break;
+            case "addition":
+                c = a + b;
+                break;
+            case "subtraction":
+                c = a - b;
+                break;
+            case "division":
+                c = (double) a / b;
+                break;
+        }
+        model.addAttribute("result", "Result: " + c);
+        return "first/calculator";
+    }
+
     @GetMapping("/hello")
     public String helloPage(@RequestParam(value = "name", required = false) String name,
-                            @RequestParam(value = "surname", required = false) String surname, Model model){
-        model.addAttribute("message","Hello " + name + " " + surname + "!");
+                            @RequestParam(value = "surname", required = false) String surname, Model model) {
+        model.addAttribute("message", "Hello " + name + " " + surname + "!");
         System.out.println("Hello " + name + " " + surname + "!");
         return "first/hello";
     }
 
     //http://localhost:8080/first/goodbye?name=Vika&surname=Arnel
-
     @GetMapping("/goodbye")
     public String goodByePage(HttpServletRequest request) {
         String name = request.getParameter("name");
